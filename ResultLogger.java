@@ -148,7 +148,7 @@ public class ResultLogger {
 			System.out.println ("Failure to log Battle details: "+e.getMessage());
 		}		
 	}
-	
+/* 	Deprecated in 1.1 : no longer needed.	
 	public void logNoCombatSuccess(String noCombatVictoryMessage) {
 		this.success += 1;
 		try {
@@ -160,5 +160,5 @@ public class ResultLogger {
 		}		
 		
 	}
-	
+	*/
 }

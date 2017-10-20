@@ -8,30 +8,24 @@
 *********************************************************/
 import java.net.MalformedURLException;
 
-public class MugloarDefenceForce {
+public class SingleCombat {
 
 // Our defines. 
-	static final String KNIGHTFETCHURL = "http://www.dragonsofmugloar.com/api/game";
-	static final String WEATHERURLSTART = "http://www.dragonsofmugloar.com/weather/api/report/";
 	static final String BATTLEGROUNDURLSTART = "http://www.dragonsofmugloar.com/api/game/";
-	static final String USER_AGENT = "MugloarDefenceForce/1.1 <Tommi Nirha>";
+	static final String USER_AGENT = "MugloarDefenceForce/SC/0.5 <Tommi Nirha>";
 	static final String BATTLEGROUNDURLEND = "/solution";	
-	static final String FILENAME = "MugloarDefence";
+	static final String FILENAME = "MugloarLog";
 	static final int EXTENSION_MOD = 100000;
 	static final int DEFAULT_RUN = 1;
 	
 	
 	static int runtimes = DEFAULT_RUN;
 	private Dragon wyrm;
-	private Knight tincan; 
-	private DragonTrainer dragonSchool;
+	private int tincancode; 
 	private static ResultLogger log;
-	private KnightFetch incoming;
-	private WeatherFetch weatherwatch;
-	private String forecast;
 	private BattleSend fightTime;
 
-	public MugloarDefenceForce() {
+	public SingleCombat() {
 		;	//empty for now
 	}
 
@@ -44,25 +38,16 @@ public class MugloarDefenceForce {
 	
 	private void runGame (int runthroughNumber) {
 		log.logGameStart(runthroughNumber);
-		System.out.println("Running battle #"+runthroughNumber);
-		try {
-			this.incoming = new KnightFetch(KNIGHTFETCHURL, USER_AGENT);
-			this.tincan = this.incoming.getKnight();
-		} catch (Exception e) {
-			log.logError("No knight: "+ e.getMessage());
-		}
-		log.logKnight(this.tincan);
-		try {
-			this.weatherwatch = new WeatherFetch(WEATHERURLSTART, this.tincan.getGameID(), USER_AGENT);
-			this.forecast = weatherwatch.getWeather();
-//			System.out.println("Weather is: "+this.forecast); // was useful for testing
-		} catch (Exception e) {
-			System.out.println("Problem getting weather : "+e.getMessage());
-		}
-		dragonSchool = new DragonTrainer(tincan);
 
-		wyrm = dragonSchool.train(this.forecast);	
+		////////////////////////////////////////////////////////// Mannually entered.
+		tincancode = 7964659;
+		wyrm = new Dragon(-5,-5,-5,-5,tincancode);
 		
+		//////////////////////////////////////////////////////////////////////////////////
+		
+		if (wyrm.remainingPoints()  == 40) {		// every stat -5, a return value to indicate no dragon sending.
+			log.logNoCombatSuccess("Knight Dies to Storm, no dragon sent to die");
+		}
 		log.logDragon(wyrm);
 		try {
 			fightTime = new BattleSend(BATTLEGROUNDURLSTART, wyrm, BATTLEGROUNDURLEND, USER_AGENT);
@@ -93,8 +78,8 @@ public class MugloarDefenceForce {
 				System.out.println(e.getMessage());
 		}		
 		for (int i = 0;i<runtimes;i++) {
-			MugloarDefenceForce mdf = new MugloarDefenceForce();
-			mdf.runGame(i+1);
+			SingleCombat sc = new SingleCombat();
+			sc.runGame(i+1);
 		}
 		log.end();
 	}

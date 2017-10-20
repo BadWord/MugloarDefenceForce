@@ -80,6 +80,11 @@ public class Dragon {
 	public String toString() {
 		StringBuilder newstring = new StringBuilder ("Dragon #");
 		newstring.append(this.id);
+		if (remainingPoints() == 40) {
+			newstring.append(" trained  only to eat, stays home.");
+			return newstring.toString();
+		}
+
 		newstring.append(" Sc: ");
 		if (this.scaleThickness <10) {
 			newstring.append('0');
@@ -103,7 +108,12 @@ public class Dragon {
 		return newstring.toString();
 	}
 	public String toJSONString () {
-		StringBuilder jSONLike = new StringBuilder("{\n"+TAB+"\"dragon\": {\n");
+		if (remainingPoints() == 40 ){
+			String noDragonString = new String("{\n}");
+			return noDragonString;
+		}
+		StringBuilder jSONLike = new StringBuilder("{\n");
+		jSONLike.append(TAB+"\"dragon\": {\n");
 		jSONLike.append(TAB+TAB+"\"scaleThickness\": " + this.scaleThickness+",\n");
 		jSONLike.append(TAB+TAB+"\"clawSharpness\": " + this.clawSharpness+",\n");
 		jSONLike.append(TAB+TAB+"\"wingStrength\": " + this.wingStrength+",\n");
